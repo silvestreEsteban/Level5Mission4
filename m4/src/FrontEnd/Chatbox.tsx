@@ -14,7 +14,6 @@ console.log(PORT);
 const ChatBox: React.FC = () => {
     // const [message, setMessage] = useState('');
     const [conversation, setConversation] = useState<ConversationMessage[]>([]);
-  
     const sendMessage = async (message: string) => {
         try {
             const res = await axios.post('/api/chatbot', { message });
