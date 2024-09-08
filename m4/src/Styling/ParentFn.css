@@ -3,16 +3,22 @@
     --secondary-color: #CB0839;
     --text-color: #363636;
     --background: #EAEFF2;
+    --text-inputs: white;
+}
+
+body {
+    margin: 0;
 }
 
 #parent-function-div {
     width: 100vw;
     height: 100vh;
+    background-color: var(--background);
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: var(--background);
-    font-family: 'Roboto', sans-serif;
+    font-family: 'Arial', sans-serif;
+    margin: 0;
 }
 
 .ai-text-chat-outer-shell {
@@ -49,8 +55,9 @@
     align-items: center;
     justify-content: center;
     color: var(--text-color);
-    background-color: var(--background);
+    background-color: var(--text-inputs);
     border-radius: 8px;
+
 
 }
 
@@ -62,5 +69,5 @@
     color: var(--text-color);
     font-size: 24px;
     margin-top: 0;
-    ;
+    text-align: center;
 }

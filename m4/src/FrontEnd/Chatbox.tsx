@@ -1,17 +1,41 @@
-import { useState } from 'react';
-import '../Styling/Chatbox.css'
+import React, { useState } from 'react';
+import '../Styling/Chat-box.css';
+import MessageSubmit from './MessageSubmit';
+import axios from 'axios';
 
 type ConversationMessage = {
     text: string;
-    role: 'user' | 'chatbot'
-}
+    role: 'user' | 'chatbot';
+};
 
-const Chatbox: React.FC = () => {
-    const [conversation, setConversation] = useState<ConversationMessage[]>([{
-        text: `I'm an insurance chatbot. I can help you with your insurance needs. How can I help you today?`, role: 'chatbot'
-    }]);
-    
-    
+const PORT = import.meta.env.VITE_PORT
+console.log(PORT);
+
+const ChatBox: React.FC = () => {
+    // const [message, setMessage] = useState('');
+    const [conversation, setConversation] = useState<ConversationMessage[]>([]);
+  
+    const sendMessage = async (message: string) => {
+        try {
+            const res = await axios.post('/api/chatbot', { message });
+            const botMessage = res.data.message;
+            setConversation((prevConversation) => [
+                ...prevConversation,
+                { text: message, role: 'user' },
+                { text: botMessage, role: 'chatbot' },
+            ]);
+        } catch (error) {
+            console.error('Error sending message:', error);
+      }
+    };
+    const handleSubmit = async (message: string) => {
+        setConversation((prevConversation) => [
+            ...prevConversation,
+            { text: message, role: 'user' },
+        ]);
+        await sendMessage(message);
+    };
+
     return (
         <div id='chat-box'>
             <div id="conversation-display">
@@ -20,10 +44,10 @@ const Chatbox: React.FC = () => {
                         {message.text}
                     </div>
                 ))}
-       
             </div>
+            <MessageSubmit handleSubmit={handleSubmit} />
         </div>
-    )
-}
+    );
+};
 
-export default Chatbox;
+export default ChatBox;

@@ -1,5 +1,6 @@
 import '../Styling/ParentFn.css';
 import ChatBox from './Chatbox';
+
 export default function ParentFn() {
     return (
         <div id='parent-function-div'>
@@ -8,6 +9,7 @@ export default function ParentFn() {
                 <h3>TURNERS CHATBOT</h3>
                     <div className='ai-text-chat-form'> 
                          <ChatBox />
+                         
                     </div>
                 </div>
             </div>
