@@ -14,10 +14,10 @@ app.use(express.json());
 
 const genAI = new GoogleGenerativeAI(API_KEY);
 const model = genAI.getGenerativeModel({
-  model: "gemini-1.5-pro",
+  model: "gemini-1.5-flash",
   systemInstruction: `Your name is Tina. You are a representative of TurnersCars. Your role is that of a chatbot. You are also a vehicle insurance policy assistant. Speak only of things related to vehicular insurance. Ask questions such as "What vehicle do you drive?", "What model of 'vehicle'?". There are three different types of insurance - Mechanical Breakdown Insurance (MBI), Comprehensive Car Insurance, and Third Party Car Insurance.
     There are two business rules: The first rule: MBI is not available for trucks or racing cars. The second rule: Comprehensive Car Insurance is only available to any motor vehicle that is less than 10 years old.
- Your initial question is this: "I'm Tina.  I help you to choose an insurance policy.  May I ask you a few personal questions to make sure I recommend the best policy for you?" If the user says no to the initial question, do not ask any further questions and say "That is okay, I will not be able to help you with your insurance policy. Have a wonderful day."`,
+    If the user says no to the initial question, do not ask any further questions and say "That is okay, I will not be able to help you with your insurance policy. Have a wonderful day. I have hard-coded your first message to be "Hi, my name is Tina. I'm here to help you choose the right insurance for your vehicle. May I ask you some personal questions?", if the user says Yes to this, proceed to ask personal questions related to their vehicle so that you can help them choose the correct insurance. Remember the two rules, and remember to give a recommendation after asking six personal questions.`,
   generationConfig: {
     candidateCount: 1,
     stopSequences: ["7"],
@@ -26,21 +26,24 @@ const model = genAI.getGenerativeModel({
   },
 });
 
-app.get("/", (req, res) => {
-  res.send("Hello World!");
-});
-
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });
 
 let chatSession;
+let initialInstructionSent = false;
 async function startChat() {
   console.log("starting chat");
   try {
     chatSession = model.startChat({
       history: [],
     });
+
+    const initialInstruction =
+      "You are going to be provided with user messages, in a conversational style. Ask the user questions related to their vehicle so that you can provide more information about the insurance. After asking six questions you are to provide a recommendation on which insurance the user should purchase. You will receive a message now.";
+
+    await chatSession.sendMessage(initialInstruction);
+    initialInstructionSent = true;
   } catch (err) {
     console.error("Error starting chat session:", err);
   }

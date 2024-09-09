@@ -8,31 +8,33 @@ type ConversationMessage = {
     role: 'user' | 'chatbot';
 };
 
-const PORT = import.meta.env.VITE_PORT
-console.log(PORT);
+const ENDPOINT = import.meta.env.VITE_LOCAL_ENDPOINT;
 
 const ChatBox: React.FC = () => {
-    // const [message, setMessage] = useState('');
-    const [conversation, setConversation] = useState<ConversationMessage[]>([]);
-    const sendMessage = async (message: string) => {
-        try {
-            const res = await axios.post('/api/chatbot', { message });
-            const botMessage = res.data.message;
-            setConversation((prevConversation) => [
-                ...prevConversation,
-                { text: message, role: 'user' },
-                { text: botMessage, role: 'chatbot' },
-            ]);
-        } catch (error) {
-            console.error('Error sending message:', error);
-      }
-    };
+    const [conversation, setConversation] = useState<ConversationMessage[]>([{
+          text: `Hi, my name is Tina. I'm here to help you choose the right insurance for your vehicle. May I ask you some personal questions?`, role: 'chatbot'
+    }]);
+   
+    
+
     const handleSubmit = async (message: string) => {
         setConversation((prevConversation) => [
             ...prevConversation,
             { text: message, role: 'user' },
         ]);
-        await sendMessage(message);
+
+        try {
+            const response = await axios.post(`${ENDPOINT}/api/chatbot`, { prompt: message})
+            const chatbotResponse = response.data.response;
+
+            setConversation((prevConversation) => [
+                ...prevConversation,
+            {text: chatbotResponse, role: 'chatbot'}, 
+            ]);
+        } catch (error) {
+            console.error('Error sending message to the chatbot:', error);
+        }
+        
     };
 
     return (
