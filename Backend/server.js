@@ -3,10 +3,10 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 import dotenv from "dotenv";
 import cors from "cors";
 
-dotenv.config({ path: "../.env" });
+dotenv.config();
 
 const API_KEY = process.env.VITE_GENERATIVE_API_KEY;
-const PORT = process.env.VITE_PORT || 4000;
+const PORT = process.env.VITE_PORT || 5000;
 
 const app = express();
 app.use(cors());
@@ -24,6 +24,10 @@ const model = genAI.getGenerativeModel({
     maxOutputTokens: 100,
     temperature: 1.0,
   },
+});
+
+app.get("/", (req, res) => {
+  res.send("Hello World!");
 });
 
 app.listen(PORT, () => {
