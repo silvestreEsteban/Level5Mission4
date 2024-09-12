@@ -8,9 +8,10 @@ type ConversationMessage = {
     role: 'user' | 'chatbot';
 };
 
-const ENDPOINT = import.meta.env.VITE_LOCAL_ENDPOINT;
+const ENDPOINT = import.meta.env.VITE_LOCAL_ENDPOINT || 5000;
 
 const ChatBox: React.FC = () => {
+    console.log("endpoint:", ENDPOINT);
     const [conversation, setConversation] = useState<ConversationMessage[]>([{
           text: `Hi, my name is Tina. I'm here to help you choose the right insurance for your vehicle. May I ask you some personal questions?`, role: 'chatbot'
     }]);

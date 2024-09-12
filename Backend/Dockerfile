@@ -10,8 +10,6 @@ RUN npm install
 
 COPY . . 
 
-RUN npm install dotenv
-
-EXPOSE 4001
+EXPOSE 8081
 
 CMD [ "node", "server.js"]
